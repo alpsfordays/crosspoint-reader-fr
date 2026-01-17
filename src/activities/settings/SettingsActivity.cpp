@@ -13,7 +13,7 @@
 
 // Define the static settings list
 namespace {
-constexpr int settingsCount = 18;
+constexpr int settingsCount = 20;
 const SettingInfo settingsList[settingsCount] = {
     // Should match with SLEEP_SCREEN_MODE
     SettingInfo::Enum("Écran de veille", &CrossPointSettings::sleepScreen, {"Sombre", "Clair", "Personnalisé", "Couverture", "Aucun"}),
@@ -28,8 +28,9 @@ const SettingInfo settingsList[settingsCount] = {
                       {"Rtr, Cnfrmr, Gche, Drte", "Gche, Drte, Rtr, Cnfrmr", "Gche, Rtr, Cnfrmr, Drte"}),
     SettingInfo::Enum("Disp. des bout. droite", &CrossPointSettings::sideButtonLayout,
                       {"Prcdent, Prochne", "Prochne, Prcdent"}),
+    SettingInfo::Toggle("Appui long pour sauter le chapitre", &CrossPointSettings::longPressChapterSkip),
     SettingInfo::Enum("Police", &CrossPointSettings::fontFamily,
-                      {"Bookerly", "Noto Sans", "Open Dyslexic"}),
+                      {"Bookerly", "Noto Sans", "Absinthe"}),
     SettingInfo::Enum("Taille de police", &CrossPointSettings::fontSize, {"Petit", "Medium", "Large", "Très Large"}),
     SettingInfo::Enum("Espacement des lignes", &CrossPointSettings::lineSpacing, {"Fin", "Normal", "Large"}),
     SettingInfo::Value("Marge d'écran", &CrossPointSettings::screenMargin, {5, 40, 5}),
