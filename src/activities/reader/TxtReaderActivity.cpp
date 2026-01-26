@@ -196,7 +196,7 @@ void TxtReaderActivity::buildPageIndex() {
   constexpr int barWidth = 200;
   constexpr int barHeight = 10;
   constexpr int boxMargin = 20;
-  const int textWidth = renderer.getTextWidth(UI_12_FONT_ID, "Indexing...");
+  const int textWidth = renderer.getTextWidth(UI_12_FONT_ID, "Indexage...");
   const int boxWidth = (barWidth > textWidth ? barWidth : textWidth) + boxMargin * 2;
   const int boxHeight = renderer.getLineHeight(UI_12_FONT_ID) + barHeight + boxMargin * 3;
   const int boxX = (renderer.getScreenWidth() - boxWidth) / 2;
@@ -206,7 +206,7 @@ void TxtReaderActivity::buildPageIndex() {
 
   // Draw initial progress box
   renderer.fillRect(boxX, boxY, boxWidth, boxHeight, false);
-  renderer.drawText(UI_12_FONT_ID, boxX + boxMargin, boxY + boxMargin, "Indexing...");
+  renderer.drawText(UI_12_FONT_ID, boxX + boxMargin, boxY + boxMargin, "Indexage...");
   renderer.drawRect(boxX + 5, boxY + 5, boxWidth - 10, boxHeight - 10);
   renderer.drawRect(barX, barY, barWidth, barHeight);
   renderer.displayBuffer();
@@ -384,14 +384,14 @@ void TxtReaderActivity::renderScreen() {
   // Initialize reader if not done
   if (!initialized) {
     renderer.clearScreen();
-    renderer.drawCenteredText(UI_12_FONT_ID, 300, "Indexing...", true, EpdFontFamily::BOLD);
+    renderer.drawCenteredText(UI_12_FONT_ID, 300, "Indexage...", true, EpdFontFamily::BOLD);
     renderer.displayBuffer();
     initializeReader();
   }
 
   if (pageOffsets.empty()) {
     renderer.clearScreen();
-    renderer.drawCenteredText(UI_12_FONT_ID, 300, "Empty file", true, EpdFontFamily::BOLD);
+    renderer.drawCenteredText(UI_12_FONT_ID, 300, "Fichier vide", true, EpdFontFamily::BOLD);
     renderer.displayBuffer();
     return;
   }

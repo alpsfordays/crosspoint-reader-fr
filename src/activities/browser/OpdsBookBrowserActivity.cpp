@@ -36,7 +36,7 @@ void OpdsBookBrowserActivity::onEnter() {
   currentPath = OPDS_ROOT_PATH;
   selectorIndex = 0;
   errorMessage.clear();
-  statusMessage = "Checking WiFi...";
+  statusMessage = "Vérification du WiFi...";
   updateRequired = true;
 
   xTaskCreate(&OpdsBookBrowserActivity::taskTrampoline, "OpdsBookBrowserTask",
@@ -82,7 +82,7 @@ void OpdsBookBrowserActivity::loop() {
         // WiFi connected - just retry fetching the feed
         Serial.printf("[%lu] [OPDS] Retry: WiFi connected, retrying fetch\n", millis());
         state = BrowserState::LOADING;
-        statusMessage = "Loading...";
+        statusMessage = "Chargement...";
         updateRequired = true;
         fetchFeed(currentPath);
       } else {
@@ -172,11 +172,11 @@ void OpdsBookBrowserActivity::render() const {
   const auto pageWidth = renderer.getScreenWidth();
   const auto pageHeight = renderer.getScreenHeight();
 
-  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Calibre Library", true, EpdFontFamily::BOLD);
+  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Bibliothèque Calibre", true, EpdFontFamily::BOLD);
 
   if (state == BrowserState::CHECK_WIFI) {
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2, statusMessage.c_str());
-    const auto labels = mappedInput.mapLabels("« Back", "", "", "");
+    const auto labels = mappedInput.mapLabels("« Retour", "", "", "");
     renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
     renderer.displayBuffer();
     return;
@@ -184,7 +184,7 @@ void OpdsBookBrowserActivity::render() const {
 
   if (state == BrowserState::LOADING) {
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2, statusMessage.c_str());
-    const auto labels = mappedInput.mapLabels("« Back", "", "", "");
+    const auto labels = mappedInput.mapLabels("« Retour", "", "", "");
     renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
     renderer.displayBuffer();
     return;
@@ -193,14 +193,14 @@ void OpdsBookBrowserActivity::render() const {
   if (state == BrowserState::ERROR) {
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 - 20, "Error:");
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 + 10, errorMessage.c_str());
-    const auto labels = mappedInput.mapLabels("« Back", "Retry", "", "");
+    const auto labels = mappedInput.mapLabels("« Retour", "Ressay.", "", "");
     renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
     renderer.displayBuffer();
     return;
   }
 
   if (state == BrowserState::DOWNLOADING) {
-    renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 - 40, "Downloading...");
+    renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 - 40, "Téléchargement...");
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 - 10, statusMessage.c_str());
     if (downloadTotal > 0) {
       const int barWidth = pageWidth - 100;
@@ -215,15 +215,15 @@ void OpdsBookBrowserActivity::render() const {
 
   // Browsing state
   // Show appropriate button hint based on selected entry type
-  const char* confirmLabel = "Open";
+  const char* confirmLabel = "Ouvrir";
   if (!entries.empty() && entries[selectorIndex].type == OpdsEntryType::BOOK) {
-    confirmLabel = "Download";
+    confirmLabel = "Télécharger";
   }
-  const auto labels = mappedInput.mapLabels("« Back", confirmLabel, "", "");
+  const auto labels = mappedInput.mapLabels("« Retour", confirmLabel, "", "");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   if (entries.empty()) {
-    renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2, "No entries found");
+    renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2, "Aucune entrée trouvée");
     renderer.displayBuffer();
     return;
   }
@@ -258,7 +258,7 @@ void OpdsBookBrowserActivity::fetchFeed(const std::string& path) {
   const char* serverUrl = SETTINGS.opdsServerUrl;
   if (strlen(serverUrl) == 0) {
     state = BrowserState::ERROR;
-    errorMessage = "No server URL configured";
+    errorMessage = "Aucun lien de serveur configuré";
     updateRequired = true;
     return;
   }
@@ -272,7 +272,7 @@ void OpdsBookBrowserActivity::fetchFeed(const std::string& path) {
     OpdsParserStream stream{parser};
     if (!HttpDownloader::fetchUrl(url, stream)) {
       state = BrowserState::ERROR;
-      errorMessage = "Failed to fetch feed";
+      errorMessage = "Récupération du flux échouée";
       updateRequired = true;
       return;
     }
@@ -280,7 +280,7 @@ void OpdsBookBrowserActivity::fetchFeed(const std::string& path) {
 
   if (!parser) {
     state = BrowserState::ERROR;
-    errorMessage = "Failed to parse feed";
+    errorMessage = "Analyse du flux échouée";
     updateRequired = true;
     return;
   }
@@ -291,7 +291,7 @@ void OpdsBookBrowserActivity::fetchFeed(const std::string& path) {
 
   if (entries.empty()) {
     state = BrowserState::ERROR;
-    errorMessage = "No entries found";
+    errorMessage = "Aucune entrée trouvée";
     updateRequired = true;
     return;
   }
@@ -306,7 +306,7 @@ void OpdsBookBrowserActivity::navigateToEntry(const OpdsEntry& entry) {
   currentPath = entry.href;
 
   state = BrowserState::LOADING;
-  statusMessage = "Loading...";
+  statusMessage = "Chargement...";
   entries.clear();
   selectorIndex = 0;
   updateRequired = true;
@@ -324,7 +324,7 @@ void OpdsBookBrowserActivity::navigateBack() {
     navigationHistory.pop_back();
 
     state = BrowserState::LOADING;
-    statusMessage = "Loading...";
+    statusMessage = "Chargement...";
     entries.clear();
     selectorIndex = 0;
     updateRequired = true;
@@ -371,7 +371,7 @@ void OpdsBookBrowserActivity::downloadBook(const OpdsEntry& book) {
     updateRequired = true;
   } else {
     state = BrowserState::ERROR;
-    errorMessage = "Download failed";
+    errorMessage = "Téléchargement échoué";
     updateRequired = true;
   }
 }
@@ -380,7 +380,7 @@ void OpdsBookBrowserActivity::checkAndConnectWifi() {
   // Already connected? Verify connection is valid by checking IP
   if (WiFi.status() == WL_CONNECTED && WiFi.localIP() != IPAddress(0, 0, 0, 0)) {
     state = BrowserState::LOADING;
-    statusMessage = "Loading...";
+    statusMessage = "Chargement...";
     updateRequired = true;
     fetchFeed(currentPath);
     return;
@@ -404,7 +404,7 @@ void OpdsBookBrowserActivity::onWifiSelectionComplete(const bool connected) {
   if (connected) {
     Serial.printf("[%lu] [OPDS] WiFi connected via selection, fetching feed\n", millis());
     state = BrowserState::LOADING;
-    statusMessage = "Loading...";
+    statusMessage = "Chargement...";
     updateRequired = true;
     fetchFeed(currentPath);
   } else {
@@ -414,7 +414,7 @@ void OpdsBookBrowserActivity::onWifiSelectionComplete(const bool connected) {
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
     state = BrowserState::ERROR;
-    errorMessage = "WiFi connection failed";
+    errorMessage = "Connexion au WiFi échouée";
     updateRequired = true;
   }
 }

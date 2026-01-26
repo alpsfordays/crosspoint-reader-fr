@@ -86,13 +86,13 @@ void FontSelectionActivity::saveAndExit() {
 void FontSelectionActivity::render() const {
   renderer.clearScreen();
 
-  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Select Font", true, EpdFontFamily::BOLD);
+  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Selection de police", true, EpdFontFamily::BOLD);
 
   int y = 50;
 
   if (fontFamilies.empty()) {
-    renderer.drawCenteredText(UI_10_FONT_ID, 120, "No fonts found in /fonts", false);
-    renderer.drawCenteredText(UI_10_FONT_ID, 150, "Add .epdfont files to SD Card", false);
+    renderer.drawCenteredText(UI_10_FONT_ID, 120, "Aucune police trouvée dans /fonts", false);
+    renderer.drawCenteredText(UI_10_FONT_ID, 150, "Ajoutez des fichiers .epdfont", false);
     renderer.displayBuffer();  // ensure update
     return;
   }

@@ -10,49 +10,49 @@
 #include "MappedInputManager.h"
 #include "fontIds.h"
 
-const char* SettingsActivity::categoryNames[categoryCount] = {"Display", "Reader", "Controls", "System"};
+const char* SettingsActivity::categoryNames[categoryCount] = {"Écran", "Lecture", "Contrôles", "Système"};
 
 namespace {
 constexpr int displaySettingsCount = 5;
 const SettingInfo displaySettings[displaySettingsCount] = {
     // Should match with SLEEP_SCREEN_MODE
-    SettingInfo::Enum("Sleep Screen", &CrossPointSettings::sleepScreen, {"Dark", "Light", "Custom", "Cover", "None"}),
-    SettingInfo::Enum("Sleep Screen Cover Mode", &CrossPointSettings::sleepScreenCoverMode, {"Fit", "Crop"}),
-    SettingInfo::Enum("Status Bar", &CrossPointSettings::statusBar, {"None", "No Progress", "Full"}),
-    SettingInfo::Enum("Hide Battery %", &CrossPointSettings::hideBatteryPercentage, {"Never", "In Reader", "Always"}),
-    SettingInfo::Enum("Refresh Frequency", &CrossPointSettings::refreshFrequency,
+    SettingInfo::Enum("Écran de veille", &CrossPointSettings::sleepScreen, {"Sombre", "Clair", "Personalisé", "Couverture", "Aucun"}),
+    SettingInfo::Enum("Mode d'écran de veille", &CrossPointSettings::sleepScreenCoverMode, {"Étiré", "Recadré"}),
+    SettingInfo::Enum("Barre d'état", &CrossPointSettings::statusBar, {"Aucune", "Sans progrès", "Complète"}),
+    SettingInfo::Enum("Cacher % de batterie", &CrossPointSettings::hideBatteryPercentage, {"Jamais", "En lecture", "Toujours"}),
+    SettingInfo::Enum("Fréquence de refraîchement", &CrossPointSettings::refreshFrequency,
                       {"1 page", "5 pages", "10 pages", "15 pages", "30 pages"})};
 
 constexpr int readerSettingsCount = 10;
 const SettingInfo readerSettings[readerSettingsCount] = {
-    SettingInfo::Enum("Font Family", &CrossPointSettings::fontFamily, {"Bookerly", "Noto Sans", "Open Dyslexic", "Custom"}),
-    SettingInfo::Action("Set Custom Font Family"),
-    SettingInfo::Enum("Font Size", &CrossPointSettings::fontSize, {"Small", "Medium", "Large", "X Large"}),
-    SettingInfo::Enum("Line Spacing", &CrossPointSettings::lineSpacing, {"Tight", "Normal", "Wide"}),
-    SettingInfo::Value("Screen Margin", &CrossPointSettings::screenMargin, {5, 40, 5}),
-    SettingInfo::Enum("Paragraph Alignment", &CrossPointSettings::paragraphAlignment,
-                      {"Justify", "Left", "Center", "Right"}),
-    SettingInfo::Toggle("Hyphenation", &CrossPointSettings::hyphenationEnabled),
-    SettingInfo::Enum("Reading Orientation", &CrossPointSettings::orientation,
-                      {"Portrait", "Landscape CW", "Inverted", "Landscape CCW"}),
-    SettingInfo::Toggle("Extra Paragraph Spacing", &CrossPointSettings::extraParagraphSpacing),
-    SettingInfo::Toggle("Text Anti-Aliasing", &CrossPointSettings::textAntiAliasing)};
+    SettingInfo::Enum("Police", &CrossPointSettings::fontFamily, {"Bookerly", "Noto Sans", "Open Dyslexic", "Personalisée"}),
+    SettingInfo::Action("Définir la police personalisée"),
+    SettingInfo::Enum("Taille de police", &CrossPointSettings::fontSize, {"Petit", "Moyenne", "Grande", "Très grande"}),
+    SettingInfo::Enum("Espacement des lignes", &CrossPointSettings::lineSpacing, {"Fin", "Moyen", "Large"}),
+    SettingInfo::Value("Marge d'écran", &CrossPointSettings::screenMargin, {5, 40, 5}),
+    SettingInfo::Enum("Alignement", &CrossPointSettings::paragraphAlignment,
+                      {"Justifié", "À droite", "Centré", "À gauche"}),
+    SettingInfo::Toggle("Césure", &CrossPointSettings::hyphenationEnabled),
+    SettingInfo::Enum("Orientation", &CrossPointSettings::orientation,
+                      {"Portrait", "90° vers droite", "Inversée", "90° vers gauche"}),
+    SettingInfo::Toggle("Espacement après paragraphes", &CrossPointSettings::extraParagraphSpacing),
+    SettingInfo::Toggle("Anticrénelage", &CrossPointSettings::textAntiAliasing)};
 
 constexpr int controlsSettingsCount = 4;
 const SettingInfo controlsSettings[controlsSettingsCount] = {
-    SettingInfo::Enum("Front Button Layout", &CrossPointSettings::frontButtonLayout,
-                      {"Bck, Cnfrm, Lft, Rght", "Lft, Rght, Bck, Cnfrm", "Lft, Bck, Cnfrm, Rght"}),
-    SettingInfo::Enum("Side Button Layout (reader)", &CrossPointSettings::sideButtonLayout,
-                      {"Prev, Next", "Next, Prev"}),
-    SettingInfo::Toggle("Long-press Chapter Skip", &CrossPointSettings::longPressChapterSkip),
-    SettingInfo::Enum("Short Power Button Click", &CrossPointSettings::shortPwrBtn, {"Ignore", "Sleep", "Page Turn"})};
+    SettingInfo::Enum("Dispo. des boutons", &CrossPointSettings::frontButtonLayout,
+                      {"Rtr, Cnfrm, Gch, Drt", "Gch, Drt, Rtr, Cnfrm", "Gch, Rtr, Cnfrm, Drt"}),
+    SettingInfo::Enum("Dispo des boutons (droite)", &CrossPointSettings::sideButtonLayout,
+                      {"Prcdnt, Prchne", "Prchne, Prcdnt"}),
+    SettingInfo::Toggle("Appui long pour sauter le chapitre", &CrossPointSettings::longPressChapterSkip),
+    SettingInfo::Enum("Appui court du bouton alim.", &CrossPointSettings::shortPwrBtn, {"Ignoré", "M. en veille", "Prchne page"})};
 
 constexpr int systemSettingsCount = 5;
 const SettingInfo systemSettings[systemSettingsCount] = {
-    SettingInfo::Enum("Time to Sleep", &CrossPointSettings::sleepTimeout,
-                      {"1 min", "5 min", "10 min", "15 min", "30 min"}),
-    SettingInfo::Action("KOReader Sync"), SettingInfo::Action("Calibre Settings"), SettingInfo::Action("Clear Cache"),
-    SettingInfo::Action("Check for updates")};
+    SettingInfo::Enum("Temps avant veille", &CrossPointSettings::sleepTimeout,
+                      {"1 min.", "5 min.", "10 min.", "15 min.", "30 min."}),
+    SettingInfo::Action("Synchro. KOReader"), SettingInfo::Action("Paramètres Calibre"), SettingInfo::Action("Vider cache"),
+    SettingInfo::Action("Vérifier les mises à jour")};
 }  // namespace
 
 void SettingsActivity::taskTrampoline(void* param) {
@@ -180,7 +180,7 @@ void SettingsActivity::render() const {
   const auto pageHeight = renderer.getScreenHeight();
 
   // Draw header
-  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Settings", true, EpdFontFamily::BOLD);
+  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Paramètres", true, EpdFontFamily::BOLD);
 
   // Draw selection
   renderer.fillRect(0, 60 + selectedCategoryIndex * 30 - 2, pageWidth - 1, 30);
@@ -198,7 +198,7 @@ void SettingsActivity::render() const {
                     pageHeight - 60, CROSSPOINT_VERSION);
 
   // Draw help text
-  const auto labels = mappedInput.mapLabels("« Back", "Select", "", "");
+  const auto labels = mappedInput.mapLabels("« Retour", "Select.", "", "");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   // Always use standard refresh for settings screen

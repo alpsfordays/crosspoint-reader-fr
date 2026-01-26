@@ -194,7 +194,7 @@ void EpubReaderChapterSelectionActivity::renderScreen() {
 
     if (isSyncItem(itemIndex)) {
       // Draw sync option (at top or bottom)
-      renderer.drawText(UI_10_FONT_ID, 20, displayY, ">> Sync Progress", !isSelected);
+      renderer.drawText(UI_10_FONT_ID, 20, displayY, ">> Synchr. progrès", !isSelected);
     } else {
       // Draw TOC item (account for top sync offset)
       const int tocIndex = tocIndexFromItemIndex(itemIndex);
@@ -207,7 +207,7 @@ void EpubReaderChapterSelectionActivity::renderScreen() {
     }
   }
 
-  const auto labels = mappedInput.mapLabels("« Back", "Select", "Up", "Down");
+  const auto labels = mappedInput.mapLabels("« Retour", "Select.", "Haut", "Bas");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   renderer.displayBuffer();

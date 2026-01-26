@@ -17,7 +17,7 @@ void BootActivity::onEnter() {
   Serial.println("[Boot] drawImage done");
   renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 + 70, "CrossPoint", true, EpdFontFamily::BOLD);
   Serial.println("[Boot] CrossPoint text done");
-  renderer.drawCenteredText(SMALL_FONT_ID, pageHeight / 2 + 95, "BOOTING");
+  renderer.drawCenteredText(SMALL_FONT_ID, pageHeight / 2 + 95, "DÉMARRAGE");
   Serial.println("[Boot] BOOTING text done");
   renderer.drawCenteredText(SMALL_FONT_ID, pageHeight - 30, CROSSPOINT_VERSION);
   Serial.println("[Boot] Version text done");

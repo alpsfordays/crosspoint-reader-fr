@@ -127,27 +127,27 @@ void OtaUpdateActivity::render() {
   const auto pageWidth = renderer.getScreenWidth();
 
   renderer.clearScreen();
-  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Update", true, EpdFontFamily::BOLD);
+  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Mettre à jour", true, EpdFontFamily::BOLD);
 
   if (state == CHECKING_FOR_UPDATE) {
-    renderer.drawCenteredText(UI_10_FONT_ID, 300, "Checking for update...", true, EpdFontFamily::BOLD);
+    renderer.drawCenteredText(UI_10_FONT_ID, 300, "Vérification...", true, EpdFontFamily::BOLD);
     renderer.displayBuffer();
     return;
   }
 
   if (state == WAITING_CONFIRMATION) {
-    renderer.drawCenteredText(UI_10_FONT_ID, 200, "New update available!", true, EpdFontFamily::BOLD);
-    renderer.drawText(UI_10_FONT_ID, 20, 250, "Current Version: " CROSSPOINT_VERSION);
-    renderer.drawText(UI_10_FONT_ID, 20, 270, ("New Version: " + updater.getLatestVersion()).c_str());
+    renderer.drawCenteredText(UI_10_FONT_ID, 200, "Nouvelle mise à jour!", true, EpdFontFamily::BOLD);
+    renderer.drawText(UI_10_FONT_ID, 20, 250, "Version actuelle : " CROSSPOINT_VERSION);
+    renderer.drawText(UI_10_FONT_ID, 20, 270, ("Nouvelle version: " + updater.getLatestVersion()).c_str());
 
-    const auto labels = mappedInput.mapLabels("Cancel", "Update", "", "");
+    const auto labels = mappedInput.mapLabels("Annuler", "Effectuer", "", "");
     renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
     renderer.displayBuffer();
     return;
   }
 
   if (state == UPDATE_IN_PROGRESS) {
-    renderer.drawCenteredText(UI_10_FONT_ID, 310, "Updating...", true, EpdFontFamily::BOLD);
+    renderer.drawCenteredText(UI_10_FONT_ID, 310, "Mise à jour...", true, EpdFontFamily::BOLD);
     renderer.drawRect(20, 350, pageWidth - 40, 50);
     renderer.fillRect(24, 354, static_cast<int>(updaterProgress * static_cast<float>(pageWidth - 44)), 42);
     renderer.drawCenteredText(UI_10_FONT_ID, 420,
@@ -160,20 +160,20 @@ void OtaUpdateActivity::render() {
   }
 
   if (state == NO_UPDATE) {
-    renderer.drawCenteredText(UI_10_FONT_ID, 300, "No update available", true, EpdFontFamily::BOLD);
+    renderer.drawCenteredText(UI_10_FONT_ID, 300, "Aucune mise à jour", true, EpdFontFamily::BOLD);
     renderer.displayBuffer();
     return;
   }
 
   if (state == FAILED) {
-    renderer.drawCenteredText(UI_10_FONT_ID, 300, "Update failed", true, EpdFontFamily::BOLD);
+    renderer.drawCenteredText(UI_10_FONT_ID, 300, "Mise à jour échouée", true, EpdFontFamily::BOLD);
     renderer.displayBuffer();
     return;
   }
 
   if (state == FINISHED) {
-    renderer.drawCenteredText(UI_10_FONT_ID, 300, "Update complete", true, EpdFontFamily::BOLD);
-    renderer.drawCenteredText(UI_10_FONT_ID, 350, "Press and hold power button to turn back on");
+    renderer.drawCenteredText(UI_10_FONT_ID, 300, "Mise à jour terminée", true, EpdFontFamily::BOLD);
+    renderer.drawCenteredText(UI_10_FONT_ID, 350, "Appuyez le bouton d'alimentation");
     renderer.displayBuffer();
     state = SHUTTING_DOWN;
     return;

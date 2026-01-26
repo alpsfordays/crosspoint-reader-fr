@@ -12,7 +12,7 @@
 
 namespace {
 constexpr int MENU_ITEMS = 5;
-const char* menuNames[MENU_ITEMS] = {"Username", "Password", "Sync Server URL", "Document Matching", "Authenticate"};
+const char* menuNames[MENU_ITEMS] = {"Nom d'utilisateur", "Mot de passe", "Synchro. du lien de serveur", "Correspondence des documents", "Authentifier"};
 }  // namespace
 
 void KOReaderSettingsActivity::taskTrampoline(void* param) {
@@ -81,7 +81,7 @@ void KOReaderSettingsActivity::handleSelection() {
     // Username
     exitActivity();
     enterNewActivity(new KeyboardEntryActivity(
-        renderer, mappedInput, "KOReader Username", KOREADER_STORE.getUsername(), 10,
+        renderer, mappedInput, "Nom d'utilisateur KOReader", KOREADER_STORE.getUsername(), 10,
         64,     // maxLength
         false,  // not password
         [this](const std::string& username) {
@@ -98,7 +98,7 @@ void KOReaderSettingsActivity::handleSelection() {
     // Password
     exitActivity();
     enterNewActivity(new KeyboardEntryActivity(
-        renderer, mappedInput, "KOReader Password", KOREADER_STORE.getPassword(), 10,
+        renderer, mappedInput, "Mot de passe KOReader", KOREADER_STORE.getPassword(), 10,
         64,     // maxLength
         false,  // show characters
         [this](const std::string& password) {
@@ -117,7 +117,7 @@ void KOReaderSettingsActivity::handleSelection() {
     const std::string prefillUrl = currentUrl.empty() ? "https://" : currentUrl;
     exitActivity();
     enterNewActivity(new KeyboardEntryActivity(
-        renderer, mappedInput, "Sync Server URL", prefillUrl, 10,
+        renderer, mappedInput, "Synchro. du lien de serveur", prefillUrl, 10,
         128,    // maxLength - URLs can be long
         false,  // not password
         [this](const std::string& url) {
@@ -175,7 +175,7 @@ void KOReaderSettingsActivity::render() {
   const auto pageWidth = renderer.getScreenWidth();
 
   // Draw header
-  renderer.drawCenteredText(UI_12_FONT_ID, 15, "KOReader Sync", true, EpdFontFamily::BOLD);
+  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Synchronisation KOReader", true, EpdFontFamily::BOLD);
 
   // Draw selection highlight
   renderer.fillRect(0, 60 + selectedIndex * 30 - 2, pageWidth - 1, 30);
@@ -190,15 +190,15 @@ void KOReaderSettingsActivity::render() {
     // Draw status for each item
     const char* status = "";
     if (i == 0) {
-      status = KOREADER_STORE.getUsername().empty() ? "[Not Set]" : "[Set]";
+      status = KOREADER_STORE.getUsername().empty() ? "[Indéfini]" : "[Défini]";
     } else if (i == 1) {
-      status = KOREADER_STORE.getPassword().empty() ? "[Not Set]" : "[Set]";
+      status = KOREADER_STORE.getPassword().empty() ? "[Indéfini]" : "[Défini]";
     } else if (i == 2) {
-      status = KOREADER_STORE.getServerUrl().empty() ? "[Not Set]" : "[Set]";
+      status = KOREADER_STORE.getServerUrl().empty() ? "[Indéfini]" : "[Défini]";
     } else if (i == 3) {
-      status = KOREADER_STORE.getMatchMethod() == DocumentMatchMethod::FILENAME ? "[Filename]" : "[Binary]";
+      status = KOREADER_STORE.getMatchMethod() == DocumentMatchMethod::FILENAME ? "[Nom de fichier]" : "[Binaire]";
     } else if (i == 4) {
-      status = KOREADER_STORE.hasCredentials() ? "" : "[Set credentials first]";
+      status = KOREADER_STORE.hasCredentials() ? "" : "[Aucun identifiant défini]";
     }
 
     const auto width = renderer.getTextWidth(UI_10_FONT_ID, status);
@@ -206,7 +206,7 @@ void KOReaderSettingsActivity::render() {
   }
 
   // Draw button hints
-  const auto labels = mappedInput.mapLabels("« Back", "Select", "", "");
+  const auto labels = mappedInput.mapLabels("« Retour", "Select.", "", "");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   renderer.displayBuffer();

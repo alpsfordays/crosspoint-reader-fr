@@ -96,7 +96,7 @@ void CategorySettingsActivity::toggleCurrentSetting() {
       SETTINGS.*(setting.valuePtr) = currentValue + setting.valueRange.step;
     }
   } else if (setting.type == SettingType::ACTION) {
-    if (strcmp(setting.name, "KOReader Sync") == 0) {
+    if (strcmp(setting.name, "Synchro. KOReader") == 0) {
       xSemaphoreTake(renderingMutex, portMAX_DELAY);
       exitActivity();
       enterNewActivity(new KOReaderSettingsActivity(renderer, mappedInput, [this] {
@@ -104,7 +104,7 @@ void CategorySettingsActivity::toggleCurrentSetting() {
         updateRequired = true;
       }));
       xSemaphoreGive(renderingMutex);
-    } else if (strcmp(setting.name, "Calibre Settings") == 0) {
+    } else if (strcmp(setting.name, "Paramètres Calibre") == 0) {
       xSemaphoreTake(renderingMutex, portMAX_DELAY);
       exitActivity();
       enterNewActivity(new CalibreSettingsActivity(renderer, mappedInput, [this] {
@@ -112,7 +112,7 @@ void CategorySettingsActivity::toggleCurrentSetting() {
         updateRequired = true;
       }));
       xSemaphoreGive(renderingMutex);
-    } else if (strcmp(setting.name, "Clear Cache") == 0) {
+    } else if (strcmp(setting.name, "Vider cache") == 0) {
       xSemaphoreTake(renderingMutex, portMAX_DELAY);
       exitActivity();
       enterNewActivity(new ClearCacheActivity(renderer, mappedInput, [this] {
@@ -120,7 +120,7 @@ void CategorySettingsActivity::toggleCurrentSetting() {
         updateRequired = true;
       }));
       xSemaphoreGive(renderingMutex);
-    } else if (strcmp(setting.name, "Check for updates") == 0) {
+    } else if (strcmp(setting.name, "Vérifier les mises à jour") == 0) {
       xSemaphoreTake(renderingMutex, portMAX_DELAY);
       exitActivity();
       enterNewActivity(new OtaUpdateActivity(renderer, mappedInput, [this] {
@@ -128,7 +128,7 @@ void CategorySettingsActivity::toggleCurrentSetting() {
         updateRequired = true;
       }));
       xSemaphoreGive(renderingMutex);
-    } else if (strcmp(setting.name, "Set Custom Font Family") == 0) {
+    } else if (strcmp(setting.name, "Définir la police personalisée") == 0) {
       xSemaphoreTake(renderingMutex, portMAX_DELAY);
       exitActivity();
       enterNewActivity(new FontSelectionActivity(renderer, mappedInput, [this] {
@@ -179,14 +179,14 @@ void CategorySettingsActivity::render() const {
     std::string valueText;
     if (settingsList[i].type == SettingType::TOGGLE && settingsList[i].valuePtr != nullptr) {
       const bool value = SETTINGS.*(settingsList[i].valuePtr);
-      valueText = value ? "ON" : "OFF";
+      valueText = value ? "OUI" : "NON";
     } else if (settingsList[i].type == SettingType::ENUM && settingsList[i].valuePtr != nullptr) {
       const uint8_t value = SETTINGS.*(settingsList[i].valuePtr);
       valueText = settingsList[i].enumValues[value];
     } else if (settingsList[i].type == SettingType::VALUE && settingsList[i].valuePtr != nullptr) {
       valueText = std::to_string(SETTINGS.*(settingsList[i].valuePtr));
     } else if (settingsList[i].type == SettingType::ACTION &&
-               strcmp(settingsList[i].name, "Set Custom Font Family") == 0) {
+               strcmp(settingsList[i].name, "Définir la police personalisée") == 0) {
       if (SETTINGS.fontFamily == CrossPointSettings::FONT_CUSTOM) {
         valueText = SETTINGS.customFontFamily;
       }
@@ -200,7 +200,7 @@ void CategorySettingsActivity::render() const {
   renderer.drawText(SMALL_FONT_ID, pageWidth - 20 - renderer.getTextWidth(SMALL_FONT_ID, CROSSPOINT_VERSION),
                     pageHeight - 60, CROSSPOINT_VERSION);
 
-  const auto labels = mappedInput.mapLabels("« Back", "Toggle", "", "");
+  const auto labels = mappedInput.mapLabels("« Sortir", "Basculer", "", "");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   renderer.displayBuffer();

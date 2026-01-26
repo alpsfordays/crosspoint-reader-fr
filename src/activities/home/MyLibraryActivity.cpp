@@ -303,7 +303,7 @@ void MyLibraryActivity::render() const {
   renderer.clearScreen();
 
   // Draw tab bar
-  std::vector<TabInfo> tabs = {{"Recent", currentTab == Tab::Recent}, {"Files", currentTab == Tab::Files}};
+  std::vector<TabInfo> tabs = {{"Récents", currentTab == Tab::Recent}, {"Fichiers", currentTab == Tab::Files}};
   ScreenComponents::drawTabBar(renderer, TAB_BAR_Y, tabs);
 
   // Draw content based on current tab
@@ -323,7 +323,7 @@ void MyLibraryActivity::render() const {
   renderer.drawSideButtonHints(UI_10_FONT_ID, ">", "<");
 
   // Draw bottom button hints
-  const auto labels = mappedInput.mapLabels("« Back", "Open", "<", ">");
+  const auto labels = mappedInput.mapLabels("« Retour", "Ouvrir", "<", ">");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   renderer.displayBuffer();
@@ -335,7 +335,7 @@ void MyLibraryActivity::renderRecentTab() const {
   const int bookCount = static_cast<int>(bookTitles.size());
 
   if (bookCount == 0) {
-    renderer.drawText(UI_10_FONT_ID, LEFT_MARGIN, CONTENT_START_Y, "No recent books");
+    renderer.drawText(UI_10_FONT_ID, LEFT_MARGIN, CONTENT_START_Y, "Aucun livre récent");
     return;
   }
 
@@ -359,7 +359,7 @@ void MyLibraryActivity::renderFilesTab() const {
   const int fileCount = static_cast<int>(files.size());
 
   if (fileCount == 0) {
-    renderer.drawText(UI_10_FONT_ID, LEFT_MARGIN, CONTENT_START_Y, "No books found");
+    renderer.drawText(UI_10_FONT_ID, LEFT_MARGIN, CONTENT_START_Y, "Aucun livre trouvé");
     return;
   }
 

@@ -477,7 +477,7 @@ void HomeActivity::render() {
     const int continueY = bookY + bookHeight - renderer.getLineHeight(UI_10_FONT_ID) * 3 / 2;
     if (coverRendered) {
       // Draw box behind "Continue Reading" text (inverted when selected: black box instead of white)
-      const char* continueText = "Continue Reading";
+      const char* continueText = "Continuer la lecture";
       const int continueTextWidth = renderer.getTextWidth(UI_10_FONT_ID, continueText);
       constexpr int continuePadding = 6;
       const int continueBoxWidth = continueTextWidth + continuePadding * 2;
@@ -488,22 +488,22 @@ void HomeActivity::render() {
       renderer.drawRect(continueBoxX, continueBoxY, continueBoxWidth, continueBoxHeight, !bookSelected);
       renderer.drawCenteredText(UI_10_FONT_ID, continueY, continueText, !bookSelected);
     } else {
-      renderer.drawCenteredText(UI_10_FONT_ID, continueY, "Continue Reading", !bookSelected);
+      renderer.drawCenteredText(UI_10_FONT_ID, continueY, "Continuer la lecture", !bookSelected);
     }
   } else {
     // No book to continue reading
     const int y =
         bookY + (bookHeight - renderer.getLineHeight(UI_12_FONT_ID) - renderer.getLineHeight(UI_10_FONT_ID)) / 2;
-    renderer.drawCenteredText(UI_12_FONT_ID, y, "No open book");
-    renderer.drawCenteredText(UI_10_FONT_ID, y + renderer.getLineHeight(UI_12_FONT_ID), "Start reading below");
+    renderer.drawCenteredText(UI_12_FONT_ID, y, "Aucun livre ouvert");
+    renderer.drawCenteredText(UI_10_FONT_ID, y + renderer.getLineHeight(UI_12_FONT_ID), "Commencer au-dessous");
   }
 
   // --- Bottom menu tiles ---
   // Build menu items dynamically
-  std::vector<const char*> menuItems = {"My Library", "File Transfer", "Settings"};
+  std::vector<const char*> menuItems = {"Bibliothèque", "Transfert de fichiers", "Paramètres"};
   if (hasOpdsUrl) {
     // Insert Calibre Library after My Library
-    menuItems.insert(menuItems.begin() + 1, "Calibre Library");
+    menuItems.insert(menuItems.begin() + 1, "Bibliothèque Calibre");
   }
 
   const int menuTileWidth = pageWidth - 2 * margin;
@@ -541,7 +541,7 @@ void HomeActivity::render() {
     renderer.drawText(UI_10_FONT_ID, textX, textY, label, !selected);
   }
 
-  const auto labels = mappedInput.mapLabels("", "Select", "Up", "Down");
+  const auto labels = mappedInput.mapLabels("", "Select.", "Haut", "Bas");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   const bool showBatteryPercentage =
