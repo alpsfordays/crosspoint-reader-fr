@@ -34,7 +34,7 @@ void CalibreWirelessActivity::onEnter() {
   stateMutex = xSemaphoreCreateMutex();
 
   state = WirelessState::DISCOVERING;
-  statusMessage = "Recherche de Calibre...";
+  statusMessage = "Discovering Calibre...";
   errorMessage.clear();
   calibreHostname.clear();
   calibreHost.clear();

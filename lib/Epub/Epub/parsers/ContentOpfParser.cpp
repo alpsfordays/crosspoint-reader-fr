@@ -38,6 +38,9 @@ ContentOpfParser::~ContentOpfParser() {
   if (SdMan.exists((cachePath + itemCacheFile).c_str())) {
     SdMan.remove((cachePath + itemCacheFile).c_str());
   }
+  itemIndex.clear();
+  itemIndex.shrink_to_fit();
+  useItemIndex = false;
 }
 
 size_t ContentOpfParser::write(const uint8_t data) { return write(&data, 1); }
@@ -107,6 +110,11 @@ void XMLCALL ContentOpfParser::startElement(void* userData, const XML_Char* name
     return;
   }
 
+  if (self->state == IN_METADATA && strcmp(name, "dc:language") == 0) {
+    self->state = IN_BOOK_LANGUAGE;
+    return;
+  }
+
   if (self->state == IN_PACKAGE && (strcmp(name, "manifest") == 0 || strcmp(name, "opf:manifest") == 0)) {
     self->state = IN_MANIFEST;
     if (!SdMan.openFileForWrite("COF", self->cachePath + itemCacheFile, self->tempItemStore)) {
@@ -123,6 +131,15 @@ void XMLCALL ContentOpfParser::startElement(void* userData, const XML_Char* name
       Serial.printf(
           "[%lu] [COF] Couldn't open temp items file for reading. This is probably going to be a fatal error.\n",
           millis());
+    }
+
+    // Sort item index for binary search if we have enough items
+    if (self->itemIndex.size() >= LARGE_SPINE_THRESHOLD) {
+      std::sort(self->itemIndex.begin(), self->itemIndex.end(), [](const ItemIndexEntry& a, const ItemIndexEntry& b) {
+        return a.idHash < b.idHash || (a.idHash == b.idHash && a.idLen < b.idLen);
+      });
+      self->useItemIndex = true;
+      Serial.printf("[%lu] [COF] Using fast index for %zu manifest items\n", millis(), self->itemIndex.size());
     }
     return;
   }
@@ -175,6 +192,15 @@ void XMLCALL ContentOpfParser::startElement(void* userData, const XML_Char* name
       }
     }
 
+    // Record index entry for fast lookup later
+    if (self->tempItemStore) {
+      ItemIndexEntry entry;
+      entry.idHash = fnvHash(itemId);
+      entry.idLen = static_cast<uint16_t>(itemId.size());
+      entry.fileOffset = static_cast<uint32_t>(self->tempItemStore.position());
+      self->itemIndex.push_back(entry);
+    }
+
     // Write items down to SD card
     serialization::writeString(self->tempItemStore, itemId);
     serialization::writeString(self->tempItemStore, href);
@@ -210,19 +236,50 @@ void XMLCALL ContentOpfParser::startElement(void* userData, const XML_Char* name
       for (int i = 0; atts[i]; i += 2) {
         if (strcmp(atts[i], "idref") == 0) {
           const std::string idref = atts[i + 1];
-          // Resolve the idref to href using items map
-          // TODO: This lookup is slow as need to scan through all items each time.
-          //       It can take up to 200ms per item when getting to 1500 items.
-          self->tempItemStore.seek(0);
-          std::string itemId;
           std::string href;
-          while (self->tempItemStore.available()) {
-            serialization::readString(self->tempItemStore, itemId);
-            serialization::readString(self->tempItemStore, href);
-            if (itemId == idref) {
-              self->cache->createSpineEntry(href);
-              break;
+          bool found = false;
+
+          if (self->useItemIndex) {
+            // Fast path: binary search
+            uint32_t targetHash = fnvHash(idref);
+            uint16_t targetLen = static_cast<uint16_t>(idref.size());
+
+            auto it = std::lower_bound(self->itemIndex.begin(), self->itemIndex.end(),
+                                       ItemIndexEntry{targetHash, targetLen, 0},
+                                       [](const ItemIndexEntry& a, const ItemIndexEntry& b) {
+                                         return a.idHash < b.idHash || (a.idHash == b.idHash && a.idLen < b.idLen);
+                                       });
+
+            // Check for match (may need to check a few due to hash collisions)
+            while (it != self->itemIndex.end() && it->idHash == targetHash) {
+              self->tempItemStore.seek(it->fileOffset);
+              std::string itemId;
+              serialization::readString(self->tempItemStore, itemId);
+              if (itemId == idref) {
+                serialization::readString(self->tempItemStore, href);
+                found = true;
+                break;
+              }
+              ++it;
             }
+          } else {
+            // Slow path: linear scan (for small manifests, keeps original behavior)
+            // TODO: This lookup is slow as need to scan through all items each time.
+            //       It can take up to 200ms per item when getting to 1500 items.
+            self->tempItemStore.seek(0);
+            std::string itemId;
+            while (self->tempItemStore.available()) {
+              serialization::readString(self->tempItemStore, itemId);
+              serialization::readString(self->tempItemStore, href);
+              if (itemId == idref) {
+                found = true;
+                break;
+              }
+            }
+          }
+
+          if (found && self->cache) {
+            self->cache->createSpineEntry(href);
           }
         }
       }
@@ -266,6 +323,11 @@ void XMLCALL ContentOpfParser::characterData(void* userData, const XML_Char* s, 
     self->author.append(s, len);
     return;
   }
+
+  if (self->state == IN_BOOK_LANGUAGE) {
+    self->language.append(s, len);
+    return;
+  }
 }
 
 void XMLCALL ContentOpfParser::endElement(void* userData, const XML_Char* name) {
@@ -296,6 +358,11 @@ void XMLCALL ContentOpfParser::endElement(void* userData, const XML_Char* name) 
   }
 
   if (self->state == IN_BOOK_AUTHOR && strcmp(name, "dc:creator") == 0) {
+    self->state = IN_METADATA;
+    return;
+  }
+
+  if (self->state == IN_BOOK_LANGUAGE && strcmp(name, "dc:language") == 0) {
     self->state = IN_METADATA;
     return;
   }

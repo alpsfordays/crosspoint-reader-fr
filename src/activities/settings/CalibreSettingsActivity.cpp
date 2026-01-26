@@ -14,7 +14,7 @@
 
 namespace {
 constexpr int MENU_ITEMS = 2;
-const char* menuNames[MENU_ITEMS] = {"URL web Calibre", "Connecter en tant qu'un appareil sans fil"};
+const char* menuNames[MENU_ITEMS] = {"Calibre Web URL", "Connect as Wireless Device"};
 }  // namespace
 
 void CalibreSettingsActivity::taskTrampoline(void* param) {
@@ -83,7 +83,7 @@ void CalibreSettingsActivity::handleSelection() {
     // Calibre Web URL
     exitActivity();
     enterNewActivity(new KeyboardEntryActivity(
-        renderer, mappedInput, "URL web Calibre", SETTINGS.opdsServerUrl, 10,
+        renderer, mappedInput, "Calibre Web URL", SETTINGS.opdsServerUrl, 10,
         127,    // maxLength
         false,  // not password
         [this](const std::string& url) {
@@ -155,14 +155,14 @@ void CalibreSettingsActivity::render() {
 
     // Draw status for URL setting
     if (i == 0) {
-      const char* status = (strlen(SETTINGS.opdsServerUrl) > 0) ? "[Défini]" : "[Indéfini]";
+      const char* status = (strlen(SETTINGS.opdsServerUrl) > 0) ? "[Set]" : "[Not Set]";
       const auto width = renderer.getTextWidth(UI_10_FONT_ID, status);
       renderer.drawText(UI_10_FONT_ID, pageWidth - 20 - width, settingY, status, !isSelected);
     }
   }
 
   // Draw button hints
-  const auto labels = mappedInput.mapLabels("« Retour", "Select.", "", "");
+  const auto labels = mappedInput.mapLabels("« Back", "Select", "", "");
   renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   renderer.displayBuffer();

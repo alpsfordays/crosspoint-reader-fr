@@ -14,6 +14,7 @@
 #include "CrossPointSettings.h"
 #include "CrossPointState.h"
 #include "MappedInputManager.h"
+#include "RecentBooksStore.h"
 #include "XtcReaderChapterSelectionActivity.h"
 #include "fontIds.h"
 
@@ -41,9 +42,10 @@ void XtcReaderActivity::onEnter() {
   // Load saved progress
   loadProgress();
 
-  // Save current XTC as last opened book
+  // Save current XTC as last opened book and add to recent books
   APP_STATE.openEpubPath = xtc->getPath();
   APP_STATE.saveToFile();
+  RECENT_BOOKS.addBook(xtc->getPath());
 
   // Trigger first update
   updateRequired = true;
@@ -253,7 +255,7 @@ void XtcReaderActivity::renderPage() {
         pixelCounts[getPixelValue(x, y)]++;
       }
     }
-    Serial.printf("[%lu] [XTR] Distribution des pixels: Blanc=%lu, GrisFoncé=%lu, GrisPâle=%lu, Noir=%lu\n", millis(),
+    Serial.printf("[%lu] [XTR] Pixel distribution: White=%lu, DarkGrey=%lu, LightGrey=%lu, Black=%lu\n", millis(),
                   pixelCounts[0], pixelCounts[1], pixelCounts[2], pixelCounts[3]);
 
     // Pass 1: BW buffer - draw all non-white pixels as black
@@ -317,7 +319,7 @@ void XtcReaderActivity::renderPage() {
 
     free(pageBuffer);
 
-    Serial.printf("[%lu] [XTR] Page rendue %lu/%lu en niveaux de gris (2-bits)\n", millis(), currentPage + 1,
+    Serial.printf("[%lu] [XTR] Rendered page %lu/%lu (2-bit grayscale)\n", millis(), currentPage + 1,
                   xtc->getPageCount());
     return;
   } else {
@@ -354,7 +356,7 @@ void XtcReaderActivity::renderPage() {
     pagesUntilFullRefresh--;
   }
 
-  Serial.printf("[%lu] [XTR] Page rendue %lu/%lu (%u-bits)\n", millis(), currentPage + 1, xtc->getPageCount(),
+  Serial.printf("[%lu] [XTR] Rendered page %lu/%lu (%u-bit)\n", millis(), currentPage + 1, xtc->getPageCount(),
                 bitDepth);
 }
 
@@ -377,7 +379,7 @@ void XtcReaderActivity::loadProgress() {
     uint8_t data[4];
     if (f.read(data, 4) == 4) {
       currentPage = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
-      Serial.printf("[%lu] [XTR] Progrès chargé: page %lu\n", millis(), currentPage);
+      Serial.printf("[%lu] [XTR] Loaded progress: page %lu\n", millis(), currentPage);
 
       // Validate page number
       if (currentPage >= xtc->getPageCount()) {
