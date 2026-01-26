@@ -76,9 +76,6 @@ void FontSelectionActivity::saveAndExit() {
     SETTINGS.customFontFamily[sizeof(SETTINGS.customFontFamily) - 1] = '\0';
     SETTINGS.fontFamily = CrossPointSettings::FONT_CUSTOM;
     SETTINGS.saveToFile();
-
-    // Reload fonts to make sure the newly selected font is loaded
-    EpdFontLoader::loadFontsFromSd(renderer);
   }
   onClose();
 }

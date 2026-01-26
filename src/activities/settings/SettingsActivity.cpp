@@ -105,7 +105,7 @@ void SettingsActivity::loop() {
 
   if (mappedInput.wasPressed(MappedInputManager::Button::Back)) {
     SETTINGS.saveToFile();
-    // Reload fonts to make sure the newly selected size is loaded
+    // Reload fonts to make sure the newly selected font settings are loaded
     EpdFontLoader::loadFontsFromSd(renderer);
     onGoHome();
     return;
