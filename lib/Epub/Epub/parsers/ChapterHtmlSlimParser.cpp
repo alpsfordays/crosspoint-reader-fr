@@ -85,7 +85,7 @@ void XMLCALL ChapterHtmlSlimParser::startElement(void* userData, const XML_Char*
     // Add placeholder text
     self->startNewTextBlock(TextBlock::CENTER_ALIGN);
     if (self->currentTextBlock) {
-      self->currentTextBlock->addWord("[Table omitted]", EpdFontFamily::ITALIC);
+      self->currentTextBlock->addWord("[Table omise]", EpdFontFamily::ITALIC);
     }
 
     // Skip table contents
@@ -100,7 +100,8 @@ void XMLCALL ChapterHtmlSlimParser::startElement(void* userData, const XML_Char*
     if (atts != nullptr) {
       for (int i = 0; atts[i]; i += 2) {
         if (strcmp(atts[i], "alt") == 0) {
-          alt = "[Image: " + std::string(atts[i + 1]) + "]";
+//          alt = "[Image: " + std::string(atts[i + 1]) + "]";
+          alt = "~";
         }
       }
       Serial.printf("[%lu] [EHP] Image alt: %s\n", millis(), alt.c_str());

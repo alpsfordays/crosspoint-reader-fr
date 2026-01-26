@@ -4,6 +4,7 @@
 
 #include "fontIds.h"
 #include "images/CrossLarge.h"
+#include "images/CrossSona.h"
 
 void BootActivity::onEnter() {
   Activity::onEnter();
@@ -13,7 +14,7 @@ void BootActivity::onEnter() {
 
   renderer.clearScreen();
   Serial.println("[Boot] clearScreen done");
-  renderer.drawImage(CrossLarge, (pageWidth + 128) / 2, (pageHeight - 128) / 2, 128, 128);
+  renderer.drawImage(CrossSona, (pageWidth + 128) / 2, (pageHeight - 128) / 2, 128, 128);
   Serial.println("[Boot] drawImage done");
   renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 + 70, "CrossPoint", true, EpdFontFamily::BOLD);
   Serial.println("[Boot] CrossPoint text done");
