@@ -80,7 +80,7 @@ void CalibreSettingsActivity::handleSelection() {
     // OPDS Server URL
     exitActivity();
     enterNewActivity(new KeyboardEntryActivity(
-        renderer, mappedInput, "Lien serveur OPDS", SETTINGS.opdsServerUrl, 10,
+        renderer, mappedInput, "OPDS Server URL", SETTINGS.opdsServerUrl, 10,
         127,    // maxLength
         false,  // not password
         [this](const std::string& url) {
@@ -153,10 +153,10 @@ void CalibreSettingsActivity::render() {
   const auto pageWidth = renderer.getScreenWidth();
 
   // Draw header
-  renderer.drawCenteredText(UI_12_FONT_ID, 15, "OPDS Browser", true, EpdFontFamily::BOLD);
+  renderer.drawCenteredText(UI_12_FONT_ID, 15, "Navigateur OPDS", true, EpdFontFamily::BOLD);
 
   // Draw info text about Calibre
-  renderer.drawCenteredText(UI_10_FONT_ID, 40, "For Calibre, add /opds to your URL");
+  renderer.drawCenteredText(UI_10_FONT_ID, 40, "Pour Calibre, ajoutez /opds au lien");
 
   // Draw selection highlight
   renderer.fillRect(0, 70 + selectedIndex * 30 - 2, pageWidth - 1, 30);
@@ -169,7 +169,7 @@ void CalibreSettingsActivity::render() {
     renderer.drawText(UI_10_FONT_ID, 20, settingY, menuNames[i], !isSelected);
 
     // Draw status for each setting
-    const char* status = "[Not Set]";
+    const char* status = "[Indéfini]";
     if (i == 0) {
       status = (strlen(SETTINGS.opdsServerUrl) > 0) ? "[Défini]" : "[Indéfini]";
     } else if (i == 1) {
