@@ -104,7 +104,7 @@ void CategorySettingsActivity::toggleCurrentSetting() {
         updateRequired = true;
       }));
       xSemaphoreGive(renderingMutex);
-    } else if (strcmp(setting.name, "Paramètres Calibre") == 0) {
+    } else if (strcmp(setting.name, "Navigateur OPDS") == 0) {
       xSemaphoreTake(renderingMutex, portMAX_DELAY);
       exitActivity();
       enterNewActivity(new CalibreSettingsActivity(renderer, mappedInput, [this] {
