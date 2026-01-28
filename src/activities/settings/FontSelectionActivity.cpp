@@ -94,8 +94,9 @@ void FontSelectionActivity::render() const {
     return;
   }
 
-  for (int i = 0; i < (int)fontFamilies.size(); i++) {
+  for (int i = 0; i < itemsPerPage; i++) {
     int idx = scrollOffset + i;
+    if (idx >= (int)fontFamilies.size()) break;
 
     // Draw selection box
     if (idx == selectedIndex) {

@@ -194,7 +194,7 @@ void KOReaderSettingsActivity::render() {
     } else if (i == 1) {
       status = KOREADER_STORE.getPassword().empty() ? "[Indéfini]" : "[Défini]";
     } else if (i == 2) {
-      status = KOREADER_STORE.getServerUrl().empty() ? "[Indéfini]" : "[Défini]";
+      status = KOREADER_STORE.getServerUrl().empty() ? "[Défaut]" : "[Perso]";
     } else if (i == 3) {
       status = KOREADER_STORE.getMatchMethod() == DocumentMatchMethod::FILENAME ? "[Nom de fichier]" : "[Binaire]";
     } else if (i == 4) {

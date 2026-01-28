@@ -13,12 +13,15 @@
 const char* SettingsActivity::categoryNames[categoryCount] = {"Écran", "Lecture", "Contrôles", "Système"};
 
 namespace {
-constexpr int displaySettingsCount = 5;
+constexpr int displaySettingsCount = 6;
 const SettingInfo displaySettings[displaySettingsCount] = {
     // Should match with SLEEP_SCREEN_MODE
     SettingInfo::Enum("Écran de veille", &CrossPointSettings::sleepScreen, {"Sombre", "Clair", "Personalisé", "Couverture", "Aucun"}),
     SettingInfo::Enum("Mode d'écran de veille", &CrossPointSettings::sleepScreenCoverMode, {"Étiré", "Recadré"}),
-    SettingInfo::Enum("Barre d'état", &CrossPointSettings::statusBar, {"Aucune", "Sans progrès", "Complète"}),
+    SettingInfo::Enum("Filtre de l'écran de veille", &CrossPointSettings::sleepScreenCoverFilter,
+                      {"Aucun", "Contraste", "Inversé"}),
+    SettingInfo::Enum("Barre d'état", &CrossPointSettings::statusBar,
+                      {"Aucune", "Sans progrès", "Pleine avec %", "Pleine avec progrès", "Barre de progrès"}),
     SettingInfo::Enum("Cacher % de batterie", &CrossPointSettings::hideBatteryPercentage, {"Jamais", "En lecture", "Toujours"}),
     SettingInfo::Enum("Fréquence de refraîchement", &CrossPointSettings::refreshFrequency,
                       {"1 page", "5 pages", "10 pages", "15 pages", "30 pages"})};
