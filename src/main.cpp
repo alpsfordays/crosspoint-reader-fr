@@ -297,15 +297,15 @@ bool isWakeupAfterFlashing() {
   return isUsbConnected() && (wakeupCause == ESP_SLEEP_WAKEUP_UNDEFINED) && (resetReason == ESP_RST_UNKNOWN);
 }
 
-bool isWakeupByPowerButton() {
-  const auto wakeupCause = esp_sleep_get_wakeup_cause();
-  const auto resetReason = esp_reset_reason();
-  if (isUsbConnected()) {
-    return wakeupCause == ESP_SLEEP_WAKEUP_GPIO;
-  } else {
-    return (wakeupCause == ESP_SLEEP_WAKEUP_UNDEFINED) && (resetReason == ESP_RST_POWERON);
-  }
-}
+//bool isWakeupByPowerButton() {
+//  const auto wakeupCause = esp_sleep_get_wakeup_cause();
+//  const auto resetReason = esp_reset_reason();
+//  if (isUsbConnected()) {
+//    return wakeupCause == ESP_SLEEP_WAKEUP_GPIO;
+//  } else {
+//    return (wakeupCause == ESP_SLEEP_WAKEUP_UNDEFINED) && (resetReason == ESP_RST_POWERON);
+//  }
+//}
 
 void setup() {
   // force serial for debugging
@@ -350,10 +350,13 @@ void setup() {
   SETTINGS.loadFromFile();
   KOREADER_STORE.loadFromFile();
 
-  if (isWakeupByPowerButton()) {
-    // For normal wakeups, verify power button press duration
-    Serial.printf("[%lu] [   ] Verifying power button press duration\n", millis());
-    verifyPowerButtonDuration();
+//  if (isWakeupByPowerButton()) {
+//    // For normal wakeups, verify power button press duration
+//    Serial.printf("[%lu] [   ] Verifying power button press duration\n", millis());
+//    verifyPowerButtonDuration();
+  if (!isWakeupAfterFlashing()) {
+    // For normal wakeups (not immediately after flashing), verify long press
+    verifyWakeupLongPress();
   }
 
   // First serial output only here to avoid timing inconsistencies for power button press duration verification
