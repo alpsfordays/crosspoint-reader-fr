@@ -3,8 +3,8 @@
 #include <GfxRenderer.h>
 
 #include "fontIds.h"
-#include "images/CrossLarge.h"
 #include "images/CrossSona.h"
+#include "images/Logo120.h"
 
 void BootActivity::onEnter() {
   Activity::onEnter();

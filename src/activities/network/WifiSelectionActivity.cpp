@@ -8,6 +8,7 @@
 #include "MappedInputManager.h"
 #include "WifiCredentialStore.h"
 #include "activities/util/KeyboardEntryActivity.h"
+#include "components/UITheme.h"
 #include "fontIds.h"
 
 void WifiSelectionActivity::taskTrampoline(void* param) {
@@ -520,7 +521,7 @@ void WifiSelectionActivity::renderNetworkList() const {
     const auto height = renderer.getLineHeight(UI_10_FONT_ID);
     const auto top = (pageHeight - height) / 2;
     renderer.drawCenteredText(UI_10_FONT_ID, top, "Aucun réseau trouvé");
-    renderer.drawCenteredText(SMALL_FONT_ID, top + height + 10, "Appuyez OK pour rescanner");
+    renderer.drawCenteredText(SMALL_FONT_ID, top + height + 10, "Appuyez Connect. pour rescanner");
   } else {
     // Calculate how many networks we can display
     constexpr int startY = 60;
@@ -546,8 +547,8 @@ void WifiSelectionActivity::renderNetworkList() const {
 
       // Draw network name (truncate if too long)
       std::string displayName = network.ssid;
-      if (displayName.length() > 16) {
-        displayName.replace(13, displayName.length() - 13, "...");
+      if (displayName.length() > 33) {
+        displayName.replace(30, displayName.length() - 30, "...");
       }
       renderer.drawText(UI_10_FONT_ID, 20, networkY, displayName.c_str());
 
@@ -586,7 +587,7 @@ void WifiSelectionActivity::renderNetworkList() const {
   // Draw help text
   renderer.drawText(SMALL_FONT_ID, 20, pageHeight - 75, "* = Crypté | + = Sauvé");
   const auto labels = mappedInput.mapLabels("« Retour", "Connect.", "", "");
-  renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+  GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 }
 
 void WifiSelectionActivity::renderConnecting() const {
@@ -625,7 +626,7 @@ void WifiSelectionActivity::renderConnected() const {
 
   // Use centralized button hints
   const auto labels = mappedInput.mapLabels("", "Continuer", "", "");
-  renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+  GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 }
 
 void WifiSelectionActivity::renderSavePrompt() const {
@@ -667,7 +668,7 @@ void WifiSelectionActivity::renderSavePrompt() const {
 
   // Use centralized button hints
   const auto labels = mappedInput.mapLabels("« Sauter", "Select.", "<", ">");
-  renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+  GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 }
 
 void WifiSelectionActivity::renderConnectionFailed() const {
@@ -680,7 +681,7 @@ void WifiSelectionActivity::renderConnectionFailed() const {
 
   // Use centralized button hints
   const auto labels = mappedInput.mapLabels("« Retour", "Continuer", "", "");
-  renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+  GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 }
 
 void WifiSelectionActivity::renderForgetPrompt() const {
@@ -689,7 +690,7 @@ void WifiSelectionActivity::renderForgetPrompt() const {
   const auto height = renderer.getLineHeight(UI_10_FONT_ID);
   const auto top = (pageHeight - height * 3) / 2;
 
-  renderer.drawCenteredText(UI_12_FONT_ID, top - 40, "Oublier ce réseau?", true, EpdFontFamily::BOLD);
+  renderer.drawCenteredText(UI_12_FONT_ID, top - 40, "Connexion échouée", true, EpdFontFamily::BOLD);
 
   std::string ssidInfo = "Réseau : " + selectedSSID;
   if (ssidInfo.length() > 28) {
@@ -697,7 +698,7 @@ void WifiSelectionActivity::renderForgetPrompt() const {
   }
   renderer.drawCenteredText(UI_10_FONT_ID, top, ssidInfo.c_str());
 
-  renderer.drawCenteredText(UI_10_FONT_ID, top + 40, "Écraser le mot de passe?");
+  renderer.drawCenteredText(UI_10_FONT_ID, top + 40, "Supprimer le mot de passe?");
 
   // Draw Cancel/Forget network buttons
   const int buttonY = top + 80;
@@ -722,5 +723,5 @@ void WifiSelectionActivity::renderForgetPrompt() const {
 
   // Use centralized button hints
   const auto labels = mappedInput.mapLabels("« Retour", "Select.", "<", ">");
-  renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+  GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 }

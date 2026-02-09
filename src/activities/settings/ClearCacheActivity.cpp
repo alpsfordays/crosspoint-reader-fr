@@ -5,6 +5,7 @@
 #include <SDCardManager.h>
 
 #include "MappedInputManager.h"
+#include "components/UITheme.h"
 #include "fontIds.h"
 
 void ClearCacheActivity::taskTrampoline(void* param) {
@@ -66,7 +67,7 @@ void ClearCacheActivity::render() {
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 + 30, "lorsqu'il sera rouvert.", true);
 
     const auto labels = mappedInput.mapLabels("« Annuler", "Vider", "", "");
-    renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+    GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
     renderer.displayBuffer();
     return;
   }
@@ -86,7 +87,7 @@ void ClearCacheActivity::render() {
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 + 10, resultText.c_str());
 
     const auto labels = mappedInput.mapLabels("« Retour", "", "", "");
-    renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+    GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
     renderer.displayBuffer();
     return;
   }
@@ -96,7 +97,7 @@ void ClearCacheActivity::render() {
     renderer.drawCenteredText(UI_10_FONT_ID, pageHeight / 2 + 10, "Vérifiez la sortie serial");
 
     const auto labels = mappedInput.mapLabels("« Retour", "", "", "");
-    renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+    GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
     renderer.displayBuffer();
     return;
   }
