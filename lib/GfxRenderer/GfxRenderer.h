@@ -1,11 +1,9 @@
 #pragma once
 
 #include <EpdFontFamily.h>
-#include <EpdFontStyles.h>
 #include <HalDisplay.h>
 
 #include <map>
-#include <string>
 
 #include "Bitmap.h"
 
@@ -56,7 +54,6 @@ class GfxRenderer {
 
   // Setup
   void insertFont(int fontId, EpdFontFamily font);
-  void clearCustomFonts(int startId = 1000);
 
   // Orientation control (affects logical width/height and coordinate transforms)
   void setOrientation(const Orientation o) { orientation = o; }
@@ -97,22 +94,21 @@ class GfxRenderer {
   void fillPolygon(const int* xPoints, const int* yPoints, int numPoints, bool state = true) const;
 
   // Text
-  int getTextWidth(int fontId, const char* text, EpdFontFamily::Style style = EpdFontStyles::REGULAR) const;
-  int getTextAdvance(int fontId, const char* text, EpdFontFamily::Style style = EpdFontStyles::REGULAR) const;
+  int getTextWidth(int fontId, const char* text, EpdFontFamily::Style style = EpdFontFamily::REGULAR) const;
   void drawCenteredText(int fontId, int y, const char* text, bool black = true,
-                        EpdFontFamily::Style style = EpdFontStyles::REGULAR) const;
+                        EpdFontFamily::Style style = EpdFontFamily::REGULAR) const;
   void drawText(int fontId, int x, int y, const char* text, bool black = true,
-                EpdFontFamily::Style style = EpdFontStyles::REGULAR) const;
+                EpdFontFamily::Style style = EpdFontFamily::REGULAR) const;
   int getSpaceWidth(int fontId) const;
   int getTextAdvanceX(int fontId, const char* text) const;
   int getFontAscenderSize(int fontId) const;
   int getLineHeight(int fontId) const;
   std::string truncatedText(int fontId, const char* text, int maxWidth,
-                            EpdFontFamily::Style style = EpdFontStyles::REGULAR) const;
+                            EpdFontFamily::Style style = EpdFontFamily::REGULAR) const;
 
   // Helper for drawing rotated text (90 degrees clockwise, for side buttons)
   void drawTextRotated90CW(int fontId, int x, int y, const char* text, bool black = true,
-                           EpdFontFamily::Style style = EpdFontStyles::REGULAR) const;
+                           EpdFontFamily::Style style = EpdFontFamily::REGULAR) const;
   int getTextHeight(int fontId) const;
 
   // Grayscale functions

@@ -1,9 +1,11 @@
 #include "FontSelectionActivity.h"
 
 #include <EpdFontLoader.h>
+#include <GfxRenderer.h>
 #include <HardwareSerial.h>
 
 #include "../../CrossPointSettings.h"
+#include "components/UITheme.h"
 #include "../../fontIds.h"
 #include "../../managers/FontManager.h"
 
@@ -116,8 +118,8 @@ void FontSelectionActivity::render() const {
   }
 
   // Draw help text
-  const auto labels = mappedInput.mapLabels("« Retour", "Select.", "", "");
-  renderer.drawButtonHints(UI_10_FONT_ID, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
+  const auto labels = mappedInput.mapLabels("« Retour", "Select.", "Haut", "Bas");
+  GUI.drawButtonHints(renderer, labels.btn1, labels.btn2, labels.btn3, labels.btn4);
 
   renderer.displayBuffer();
 }
